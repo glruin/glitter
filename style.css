@@ -98,6 +98,7 @@ body {
   background-color: #fceae8;
   border: 1px solid #e5c5c5;
   border-radius: 0.4rem;
+  font-family: 'Cheesecake', cursive;
   font-size: 0.75rem;
   color: #5f4b32;
   font-weight: bold;
@@ -192,6 +193,12 @@ body {
   cursor: pointer;
 }
 
+#selector-pomodoro {
+  font-family: 'Cheesecake', cursive;
+  padding: 0.3rem;
+  margin-bottom: 0.6rem;
+}
+
 .pomodoro-global {
   margin-top: 30px;
   text-align: center;
@@ -222,6 +229,12 @@ body {
     flex-direction: column;
     align-items: center;
   }
+
+  .semestre {
+    min-width: unset;
+    width: 90%;
+  }
+}
 
   .semestre {
     min-width: unset;
