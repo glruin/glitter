@@ -1,126 +1,197 @@
 function crearMalla(malla) {
-  const mallaContainer = document.getElementById("malla-container");
+  const contenedor = document.getElementById("malla-container");
   const selectorPomodoro = document.getElementById("selector-pomodoro");
+
+  contenedor.innerHTML = ""; // limpiar
 
   malla.forEach(anio => {
     anio.semestres.forEach(semestre => {
-      const semestreDiv = document.createElement("div");
-      semestreDiv.className = "semestre";
+      const divSemestre = document.createElement("div");
+      divSemestre.className = "semestre";
 
-      const tituloAnio = document.createElement("div");
-      tituloAnio.className = "anio-titulo";
-      tituloAnio.textContent = `Año ${anio.anio}`;
+      const divAnio = document.createElement("div");
+      divAnio.className = "anio-titulo";
+      divAnio.textContent = `Año ${anio.anio}`;
 
-      const tituloSemestre = document.createElement("div");
-      tituloSemestre.className = "semestre-titulo";
-      tituloSemestre.textContent = `Semestre ${semestre.semestre}`;
+      const divSemestreTitulo = document.createElement("div");
+      divSemestreTitulo.className = "semestre-titulo";
+      divSemestreTitulo.textContent = `Semestre ${semestre.semestre}`;
 
-      const promedioSemestre = document.createElement("div");
-      promedioSemestre.className = "semestre-promedio";
-      promedioSemestre.id = `prom-sem-${anio.anio}-${semestre.semestre}`;
-      promedioSemestre.textContent = "Prom: -";
+      const promSemestre = document.createElement("div");
+      promSemestre.className = "semestre-promedio";
+      promSemestre.id = `prom-sem-${anio.anio}-${semestre.semestre}`;
+      promSemestre.textContent = "Prom: -";
 
-      semestreDiv.appendChild(tituloAnio);
-      semestreDiv.appendChild(tituloSemestre);
+      divSemestre.appendChild(divAnio);
+      divSemestre.appendChild(divSemestreTitulo);
 
-      const ramosDiv = document.createElement("div");
-      ramosDiv.className = "ramos";
+      const divRamos = document.createElement("div");
+      divRamos.className = "ramos";
 
-      tituloSemestre.addEventListener("click", () => {
-        const ramos = semestreDiv.querySelectorAll(".ramo:not(.bloqueado)");
-        const todosAprobados = Array.from(ramos).every(r => r.classList.contains("aprobado"));
-        ramos.forEach(ramo => {
-          if (todosAprobados) {
-            ramo.classList.remove("aprobado");
-          } else {
-            ramo.classList.add("aprobado");
-          }
+      divSemestreTitulo.addEventListener("click", () => {
+        const ramosNoBloq = divRamos.querySelectorAll(".ramo:not(.bloqueado)");
+        const todosAprobados = Array.from(ramosNoBloq).every(r => r.classList.contains("aprobado"));
+        ramosNoBloq.forEach(ramo => {
+          if (todosAprobados) ramo.classList.remove("aprobado");
+          else ramo.classList.add("aprobado");
           guardarEstadoRamo(ramo);
         });
         actualizarEstadoRamos();
+        actualizarPromedios();
       });
 
       semestre.ramos.forEach(ramo => {
-        const ramoDiv = document.createElement("div");
-        ramoDiv.className = "ramo bloqueado";
-        ramoDiv.setAttribute("data-codigo", ramo.codigo);
-        ramoDiv.setAttribute("data-prereqs", JSON.stringify(ramo.prereqs));
-        ramoDiv.setAttribute("data-anio", anio.anio);
-        ramoDiv.setAttribute("data-semestre", semestre.semestre);
-        ramoDiv.setAttribute("data-sct", ramo.sct);
+        const divRamo = document.createElement("div");
+        divRamo.className = "ramo bloqueado";
+        divRamo.dataset.codigo = ramo.codigo;
+        divRamo.dataset.prereqs = JSON.stringify(ramo.prereqs);
+        divRamo.dataset.anio = anio.anio;
+        divRamo.dataset.semestre = semestre.semestre;
+        divRamo.dataset.sct = ramo.sct;
 
-        ramoDiv.innerHTML = `
+        divRamo.innerHTML = `
           <div class="ramo-contenido">
-            <div class="ramo-header">
-              <span>${ramo.nombre}</span>
-              <span>${ramo.codigo}</span>
-              <span>${ramo.sct} SCT</span>
-              <div class="promedio" id="promedio-${ramo.codigo}"></div>
+            <span>${ramo.nombre}</span> <br>
+            <small>${ramo.codigo} - ${ramo.sct} SCT</small>
+            <div class="promedio" id="promedio-${ramo.codigo}"></div>
+            <div class="nota-box" style="display:none;">
+              <label>Nota: <input type="number" step="0.1" min="1" max="7" id="nota-${ramo.codigo}" class="nota-input"></label>
             </div>
+            <div class="estadistica-box" id="stats-${ramo.codigo}"></div>
           </div>
         `;
 
-        ramoDiv.addEventListener("click", () => {
-          if (!ramoDiv.classList.contains("bloqueado")) {
-            ramoDiv.classList.toggle("aprobado");
-            guardarEstadoRamo(ramoDiv);
+        divRamo.addEventListener("click", () => {
+          if (!divRamo.classList.contains("bloqueado")) {
+            divRamo.classList.toggle("aprobado");
+            guardarEstadoRamo(divRamo);
             actualizarEstadoRamos();
+            actualizarPromedios();
           }
         });
 
-        ramoDiv.addEventListener("dblclick", () => {
-          const option = document.createElement("option");
-          option.value = ramo.codigo;
-          option.textContent = ramo.nombre;
-          selectorPomodoro.appendChild(option);
+        divRamo.addEventListener("dblclick", () => {
+          const notaBox = divRamo.querySelector(".nota-box");
+          notaBox.style.display = notaBox.style.display === "none" ? "block" : "none";
         });
 
-        ramosDiv.appendChild(ramoDiv);
+        const inputNota = divRamo.querySelector(".nota-input");
+        inputNota.addEventListener("input", () => {
+          const val = parseFloat(inputNota.value);
+          if (!isNaN(val)) {
+            localStorage.setItem(`nota-${ramo.codigo}`, val);
+            actualizarPromedios();
+          }
+        });
 
-        const pomodoroOption = document.createElement("option");
-        pomodoroOption.value = ramo.codigo;
-        pomodoroOption.textContent = ramo.nombre;
-        selectorPomodoro.appendChild(pomodoroOption);
+        const notaGuardada = localStorage.getItem(`nota-${ramo.codigo}`);
+        if (notaGuardada) inputNota.value = notaGuardada;
+
+        divRamos.appendChild(divRamo);
+
+        const option = document.createElement("option");
+        option.value = ramo.codigo;
+        option.textContent = ramo.nombre;
+        selectorPomodoro.appendChild(option);
+
+        actualizarEstadisticasRamo(ramo.codigo);
       });
 
-      semestreDiv.appendChild(ramosDiv);
-      semestreDiv.appendChild(promedioSemestre);
-      mallaContainer.appendChild(semestreDiv);
+      divSemestre.appendChild(divRamos);
+      divSemestre.appendChild(promSemestre);
+      contenedor.appendChild(divSemestre);
     });
   });
 
   actualizarEstadoRamos();
+  actualizarPromedios();
 }
 
 function actualizarEstadoRamos() {
-  const todosLosRamos = document.querySelectorAll(".ramo");
-  todosLosRamos.forEach(ramo => {
-    const prereqs = JSON.parse(ramo.getAttribute("data-prereqs"));
-    const aprobados = Array.from(document.querySelectorAll(".ramo.aprobado")).map(r => r.getAttribute("data-codigo"));
-    const todosAprobados = prereqs.every(pr => aprobados.includes(pr));
+  const todosRamos = document.querySelectorAll(".ramo");
+  const aprobados = Array.from(document.querySelectorAll(".ramo.aprobado")).map(r => r.dataset.codigo);
 
-    if (todosAprobados) {
-      ramo.classList.remove("bloqueado");
-    } else {
-      if (!ramo.classList.contains("aprobado")) {
-        ramo.classList.add("bloqueado");
-      }
-    }
+  todosRamos.forEach(ramo => {
+    const prereqs = JSON.parse(ramo.dataset.prereqs);
+    const cumple = prereqs.every(p => aprobados.includes(p));
+    if (cumple) ramo.classList.remove("bloqueado");
+    else if (!ramo.classList.contains("aprobado")) ramo.classList.add("bloqueado");
   });
 }
 
-function guardarEstadoRamo(ramoDiv) {
-  const codigo = ramoDiv.getAttribute("data-codigo");
-  const aprobado = ramoDiv.classList.contains("aprobado");
-  const guardado = JSON.parse(localStorage.getItem(`ramo-${codigo}`)) || {};
-  guardado.aprobado = aprobado;
-  localStorage.setItem(`ramo-${codigo}`, JSON.stringify(guardado));
+function guardarEstadoRamo(divRamo) {
+  const codigo = divRamo.dataset.codigo;
+  const aprobado = divRamo.classList.contains("aprobado");
+  const estado = JSON.parse(localStorage.getItem(`ramo-${codigo}`)) || {};
+  estado.aprobado = aprobado;
+  localStorage.setItem(`ramo-${codigo}`, JSON.stringify(estado));
 }
 
-// Pomodoro Global
+function actualizarPromedios() {
+  const semestres = document.querySelectorAll(".semestre");
+  let totalNotas = 0;
+  let totalSCT = 0;
+
+  semestres.forEach(sem => {
+    const ramos = sem.querySelectorAll(".ramo");
+    let suma = 0;
+    let scts = 0;
+
+    ramos.forEach(ramo => {
+      const sct = parseInt(ramo.dataset.sct);
+      const codigo = ramo.dataset.codigo;
+      const nota = parseFloat(localStorage.getItem(`nota-${codigo}`));
+      if (!isNaN(nota)) {
+        suma += nota * sct;
+        scts += sct;
+        totalNotas += nota * sct;
+        totalSCT += sct;
+      }
+    });
+
+    const promElem = sem.querySelector(".semestre-promedio");
+    promElem.textContent = scts > 0 ? `Prom: ${(suma / scts).toFixed(2)}` : "Prom: -";
+  });
+
+  const globalElem = document.getElementById("promedio-global");
+  if (globalElem) {
+    globalElem.textContent = totalSCT > 0 ? `Promedio Global: ${(totalNotas / totalSCT).toFixed(2)}` : "Promedio Global: -";
+  }
+}
+
+function registrarEstudio(codigoRamo, minutosEstudio = 25) {
+  const key = `stats-${codigoRamo}`;
+  const ahora = new Date();
+  const fecha = ahora.toISOString().split("T")[0];
+  const stats = JSON.parse(localStorage.getItem(key)) || { sesiones: [], totalMin: 0 };
+  stats.sesiones.push({ fecha, minutos: minutosEstudio });
+  stats.totalMin += minutosEstudio;
+  localStorage.setItem(key, JSON.stringify(stats));
+  actualizarEstadisticasRamo(codigoRamo);
+}
+
+function actualizarEstadisticasRamo(codigo) {
+  const statsBox = document.getElementById(`stats-${codigo}`);
+  if (!statsBox) return;
+  const stats = JSON.parse(localStorage.getItem(`stats-${codigo}`)) || { sesiones: [], totalMin: 0 };
+
+  const totalHoras = (stats.totalMin / 60).toFixed(2);
+  const dias = [...new Set(stats.sesiones.map(s => s.fecha))].length;
+  const promDiario = dias > 0 ? (stats.totalMin / dias / 60).toFixed(2) : "0.00";
+
+  statsBox.innerHTML = `
+    <small>
+      Horas totales: ${totalHoras} <br>
+      Sesiones: ${stats.sesiones.length} <br>
+      Prom. diario: ${promDiario} h
+    </small>
+  `;
+}
+
 let pomodoroInterval = null;
 let tiempoRestante = 25 * 60;
 let enMarcha = false;
+
 function iniciarPomodoroGlobal() {
   if (enMarcha) return;
   const codigo = document.getElementById("selector-pomodoro").value;
@@ -133,8 +204,10 @@ function iniciarPomodoroGlobal() {
     } else {
       clearInterval(pomodoroInterval);
       alert("¡Pomodoro completado!");
+      registrarEstudio(codigo);
       enMarcha = false;
       tiempoRestante = 25 * 60;
+      mostrarPomodoroGlobal();
     }
   }, 1000);
 }
@@ -147,9 +220,13 @@ function reiniciarPomodoroGlobal() {
   mostrarPomodoroGlobal();
 }
 function mostrarPomodoroGlobal() {
-  const minutos = Math.floor(tiempoRestante / 60).toString().padStart(2, '0');
-  const segundos = (tiempoRestante % 60).toString().padStart(2, '0');
-  document.getElementById("timer-global").textContent = `${minutos}:${segundos}`;
+  const min = Math.floor(tiempoRestante / 60).toString().padStart(2, "0");
+  const seg = (tiempoRestante % 60).toString().padStart(2, "0");
+  document.getElementById("timer-global").textContent = `${min}:${seg}`;
 }
 
 crearMalla(malla);
+mostrarPomodoroGlobal();
+actualizarEstadoRamos();
+actualizarPromedios();
+
