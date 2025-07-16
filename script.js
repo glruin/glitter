@@ -48,12 +48,34 @@ function crearMalla(malla) {
         ramoDiv.setAttribute("data-semestre", semestre.semestre);
         ramoDiv.setAttribute("data-sct", ramo.sct);
 
-        ramoDiv.innerHTML = `
-          ${ramo.nombre}
+        const contenido = document.createElement("div");
+        contenido.innerHTML = `
+          <span>${ramo.nombre} <span class="icono-apunte" title="Abrir Apuntes">❀</span></span>
           <span>${ramo.codigo}</span>
           <span>${ramo.sct} SCT</span>
           <div class="promedio" id="promedio-${ramo.codigo}"></div>
+          <textarea class="area-apunte" id="nota-${ramo.codigo}" placeholder="Escribe tus apuntes aquí..."></textarea>
         `;
+
+        ramoDiv.appendChild(contenido);
+
+        const iconoApunte = contenido.querySelector(".icono-apunte");
+        const areaApunte = contenido.querySelector(".area-apunte");
+        areaApunte.style.display = "none";
+
+        iconoApunte.addEventListener("click", (e) => {
+          e.stopPropagation();
+          areaApunte.style.display = areaApunte.style.display === "none" ? "block" : "none";
+        });
+
+        areaApunte.addEventListener("input", () => {
+          localStorage.setItem(`nota-${ramo.codigo}`, areaApunte.value);
+        });
+
+        const guardado = localStorage.getItem(`nota-${ramo.codigo}`);
+        if (guardado) {
+          areaApunte.value = guardado;
+        }
 
         ramoDiv.addEventListener("click", () => {
           if (!ramoDiv.classList.contains("bloqueado")) {
@@ -63,144 +85,16 @@ function crearMalla(malla) {
           }
         });
 
-        ramoDiv.addEventListener("dblclick", (e) => {
-          e.stopPropagation();
-          const entrada = prompt("Ingresa tus notas con ponderaciones (ej: 6.0:40, 5.5:60):");
-          if (entrada) {
-            const pares = entrada.split(",").map(n => n.trim().split(":"));
-            const notas = pares.map(p => parseFloat(p[0]));
-            const pesos = pares.map(p => parseFloat(p[1] || 100));
-            const sumaPesos = pesos.reduce((a, b) => a + b, 0);
-            const promedio = (notas.reduce((acc, nota, i) => acc + nota * pesos[i], 0) / sumaPesos).toFixed(2);
-            const promedioEl = ramoDiv.querySelector(`#promedio-${ramo.codigo}`);
-            promedioEl.textContent = `Prom: ${promedio}`;
-            guardarNotas(ramo.codigo, pares);
-            actualizarPromedioSemestre(anio.anio, semestre.semestre);
-            actualizarPromedioGlobal();
-          }
-        });
-
-        const guardado = JSON.parse(localStorage.getItem(`ramo-${ramo.codigo}`));
-        if (guardado) {
-          if (guardado.aprobado) ramoDiv.classList.add("aprobado");
-          const promedioEl = ramoDiv.querySelector(`#promedio-${ramo.codigo}`);
-          if (guardado.notas && guardado.notas.length) {
-            const notas = guardado.notas.map(p => parseFloat(p[0]));
-            const pesos = guardado.notas.map(p => parseFloat(p[1] || 100));
-            const sumaPesos = pesos.reduce((a, b) => a + b, 0);
-            const promedio = (notas.reduce((acc, nota, i) => acc + nota * pesos[i], 0) / sumaPesos).toFixed(2);
-            promedioEl.textContent = `Prom: ${promedio}`;
-          }
-        }
-
         ramosDiv.appendChild(ramoDiv);
       });
 
       semestreDiv.appendChild(ramosDiv);
       semestreDiv.appendChild(promedioSemestre);
       mallaContainer.appendChild(semestreDiv);
-
-      actualizarPromedioSemestre(anio.anio, semestre.semestre);
     });
   });
 
   actualizarEstadoRamos();
-  mostrarPromedioGlobalContainer();
-  actualizarPromedioGlobal();
-}
-
-function actualizarEstadoRamos() {
-  const todosLosRamos = document.querySelectorAll(".ramo");
-
-  todosLosRamos.forEach(ramo => {
-    const prereqs = JSON.parse(ramo.getAttribute("data-prereqs"));
-    const aprobados = Array.from(document.querySelectorAll(".ramo.aprobado")).map(r => r.getAttribute("data-codigo"));
-    const todosAprobados = prereqs.every(pr => aprobados.includes(pr));
-
-    if (todosAprobados) {
-      ramo.classList.remove("bloqueado");
-    } else {
-      if (!ramo.classList.contains("aprobado")) {
-        ramo.classList.add("bloqueado");
-      }
-    }
-  });
-}
-
-function guardarEstadoRamo(ramoDiv) {
-  const codigo = ramoDiv.getAttribute("data-codigo");
-  const aprobado = ramoDiv.classList.contains("aprobado");
-  const guardado = JSON.parse(localStorage.getItem(`ramo-${codigo}`)) || {};
-  guardado.aprobado = aprobado;
-  localStorage.setItem(`ramo-${codigo}`, JSON.stringify(guardado));
-}
-
-function guardarNotas(codigo, pares) {
-  const guardado = JSON.parse(localStorage.getItem(`ramo-${codigo}`)) || {};
-  guardado.notas = pares;
-  localStorage.setItem(`ramo-${codigo}`, JSON.stringify(guardado));
-}
-
-function actualizarPromedioSemestre(anio, semestre) {
-  const ramos = document.querySelectorAll(`.ramo[data-anio='${anio}'][data-semestre='${semestre}']`);
-  let suma = 0;
-  let totalCreditos = 0;
-
-  ramos.forEach(ramo => {
-    const codigo = ramo.getAttribute("data-codigo");
-    const sct = parseFloat(ramo.getAttribute("data-sct"));
-    const guardado = JSON.parse(localStorage.getItem(`ramo-${codigo}`));
-    if (guardado && guardado.notas && guardado.notas.length) {
-      const notas = guardado.notas.map(p => parseFloat(p[0]));
-      const pesos = guardado.notas.map(p => parseFloat(p[1] || 100));
-      const sumaPesos = pesos.reduce((a, b) => a + b, 0);
-      const promedio = notas.reduce((acc, nota, i) => acc + nota * pesos[i], 0) / sumaPesos;
-      suma += promedio * sct;
-      totalCreditos += sct;
-    }
-  });
-
-  const contenedor = document.getElementById(`prom-sem-${anio}-${semestre}`);
-  if (totalCreditos > 0) {
-    contenedor.textContent = `Prom Sem: ${(suma / totalCreditos).toFixed(2)}`;
-  } else {
-    contenedor.textContent = `Prom Sem: -`;
-  }
-}
-
-function mostrarPromedioGlobalContainer() {
-  const globalDiv = document.createElement("div");
-  globalDiv.className = "global-promedio";
-  globalDiv.id = "global-promedio";
-  globalDiv.textContent = "Promedio General: -";
-  document.body.appendChild(globalDiv);
-}
-
-function actualizarPromedioGlobal() {
-  const ramos = document.querySelectorAll(".ramo");
-  let suma = 0;
-  let totalCreditos = 0;
-
-  ramos.forEach(ramo => {
-    const codigo = ramo.getAttribute("data-codigo");
-    const sct = parseFloat(ramo.getAttribute("data-sct"));
-    const guardado = JSON.parse(localStorage.getItem(`ramo-${codigo}`));
-    if (guardado && guardado.notas && guardado.notas.length) {
-      const notas = guardado.notas.map(p => parseFloat(p[0]));
-      const pesos = guardado.notas.map(p => parseFloat(p[1] || 100));
-      const sumaPesos = pesos.reduce((a, b) => a + b, 0);
-      const promedio = notas.reduce((acc, nota, i) => acc + nota * pesos[i], 0) / sumaPesos;
-      suma += promedio * sct;
-      totalCreditos += sct;
-    }
-  });
-
-  const contenedor = document.getElementById("global-promedio");
-  if (totalCreditos > 0) {
-    contenedor.textContent = `Promedio General: ${(suma / totalCreditos).toFixed(2)}`;
-  } else {
-    contenedor.textContent = `Promedio General: -`;
-  }
 }
 
 crearMalla(malla);
