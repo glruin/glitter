@@ -41,7 +41,8 @@ body {
 
 .semestre-titulo {
   text-align: center;
-  font-size: 1rem;
+  font-size: 0.75rem;
+  font-family: 'Cheesecake', cursive;
   margin-bottom: 0.3rem;
   color: #b58f84;
   cursor: pointer;
