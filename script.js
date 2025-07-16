@@ -1,6 +1,6 @@
 function crearMalla(malla) {
   const mallaContainer = document.getElementById("malla-container");
-
+  
   malla.forEach(anio => {
     anio.semestres.forEach(semestre => {
       const semestreDiv = document.createElement("div");
