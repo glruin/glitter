@@ -50,7 +50,8 @@ body {
 }
 
 .anio-titulo {
-  font-size: 0.85rem;
+  font-family: 'Cheesecake', cursive;
+  font-size: 0.75rem;
   margin-bottom: 0.3rem;
   color: #a2786a;
   font-weight: bold;
