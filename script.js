@@ -1,6 +1,6 @@
 function crearMalla(malla) {
   const mallaContainer = document.getElementById("malla-container");
-  
+
   malla.forEach(anio => {
     anio.semestres.forEach(semestre => {
       const semestreDiv = document.createElement("div");
@@ -48,19 +48,20 @@ function crearMalla(malla) {
         ramoDiv.setAttribute("data-semestre", semestre.semestre);
         ramoDiv.setAttribute("data-sct", ramo.sct);
 
-        const contenido = document.createElement("div");
-        contenido.innerHTML = `
-          <span>${ramo.nombre} <span class="icono-apunte" title="Abrir Apuntes">❀</span></span>
-          <span>${ramo.codigo}</span>
-          <span>${ramo.sct} SCT</span>
-          <div class="promedio" id="promedio-${ramo.codigo}"></div>
-          <textarea class="area-apunte" id="nota-${ramo.codigo}" placeholder="Escribe tus apuntes aquí..."></textarea>
+        ramoDiv.innerHTML = `
+          <div class="ramo-contenido">
+            <div class="ramo-header">
+              <span>${ramo.nombre} <span class="icono-apunte" title="Apuntes">❀</span></span>
+              <span>${ramo.codigo}</span>
+              <span>${ramo.sct} SCT</span>
+              <div class="promedio" id="promedio-${ramo.codigo}"></div>
+            </div>
+            <textarea class="area-apunte" id="nota-${ramo.codigo}" placeholder="Escribe tus apuntes aquí..."></textarea>
+          </div>
         `;
 
-        ramoDiv.appendChild(contenido);
-
-        const iconoApunte = contenido.querySelector(".icono-apunte");
-        const areaApunte = contenido.querySelector(".area-apunte");
+        const iconoApunte = ramoDiv.querySelector(".icono-apunte");
+        const areaApunte = ramoDiv.querySelector(".area-apunte");
         areaApunte.style.display = "none";
 
         iconoApunte.addEventListener("click", (e) => {
@@ -72,9 +73,9 @@ function crearMalla(malla) {
           localStorage.setItem(`nota-${ramo.codigo}`, areaApunte.value);
         });
 
-        const guardado = localStorage.getItem(`nota-${ramo.codigo}`);
-        if (guardado) {
-          areaApunte.value = guardado;
+        const textoGuardado = localStorage.getItem(`nota-${ramo.codigo}`);
+        if (textoGuardado) {
+          areaApunte.value = textoGuardado;
         }
 
         ramoDiv.addEventListener("click", () => {
@@ -95,6 +96,32 @@ function crearMalla(malla) {
   });
 
   actualizarEstadoRamos();
+}
+
+function actualizarEstadoRamos() {
+  const todosLosRamos = document.querySelectorAll(".ramo");
+
+  todosLosRamos.forEach(ramo => {
+    const prereqs = JSON.parse(ramo.getAttribute("data-prereqs"));
+    const aprobados = Array.from(document.querySelectorAll(".ramo.aprobado")).map(r => r.getAttribute("data-codigo"));
+    const todosAprobados = prereqs.every(pr => aprobados.includes(pr));
+
+    if (todosAprobados) {
+      ramo.classList.remove("bloqueado");
+    } else {
+      if (!ramo.classList.contains("aprobado")) {
+        ramo.classList.add("bloqueado");
+      }
+    }
+  });
+}
+
+function guardarEstadoRamo(ramoDiv) {
+  const codigo = ramoDiv.getAttribute("data-codigo");
+  const aprobado = ramoDiv.classList.contains("aprobado");
+  const guardado = JSON.parse(localStorage.getItem(`ramo-${codigo}`)) || {};
+  guardado.aprobado = aprobado;
+  localStorage.setItem(`ramo-${codigo}`, JSON.stringify(guardado));
 }
 
 crearMalla(malla);
