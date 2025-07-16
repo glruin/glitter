@@ -49,6 +49,10 @@ function crearMalla(malla) {
         divRamo.dataset.semestre = semestre.semestre;
         divRamo.dataset.sct = ramo.sct;
 
+const estadoGuardado = JSON.parse(localStorage.getItem(`ramo-${ramo.codigo}`));
+if (estadoGuardado?.aprobado) {
+  divRamo.classList.add("aprobado");
+}
         divRamo.innerHTML = `
           <div class="ramo-contenido">
             <span>${ramo.nombre}</span> <br>
@@ -229,4 +233,3 @@ crearMalla(malla);
 mostrarPomodoroGlobal();
 actualizarEstadoRamos();
 actualizarPromedios();
-
