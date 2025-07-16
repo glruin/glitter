@@ -10,6 +10,16 @@
 <body>
   <h1 class="titulo">Malla Interactiva - Química y Farmacia </h1>
   <div id="malla-container" class="malla"></div>
+<div id="pomodoro-global" class="pomodoro-global">
+  <h2>Modo Pomodoro Global</h2>
+  <select id="selector-pomodoro">
+    <option value="">Selecciona un ramo</option>
+  </select>
+  <div id="timer-global">25:00</div>
+  <button onclick="iniciarPomodoroGlobal()">Iniciar</button>
+  <button onclick="pausarPomodoroGlobal()">Pausar</button>
+  <button onclick="reiniciarPomodoroGlobal()">Reiniciar</button>
+</div>
 
   <script src="data.js"></script>
   <script src="script.js"></script>
