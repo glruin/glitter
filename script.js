@@ -1,5 +1,6 @@
 function crearMalla(malla) {
   const mallaContainer = document.getElementById("malla-container");
+  const selectorPomodoro = document.getElementById("selector-pomodoro");
 
   malla.forEach(anio => {
     anio.semestres.forEach(semestre => {
@@ -51,32 +52,13 @@ function crearMalla(malla) {
         ramoDiv.innerHTML = `
           <div class="ramo-contenido">
             <div class="ramo-header">
-              <span>${ramo.nombre} <span class="icono-apunte" title="Apuntes">❀</span></span>
+              <span>${ramo.nombre}</span>
               <span>${ramo.codigo}</span>
               <span>${ramo.sct} SCT</span>
               <div class="promedio" id="promedio-${ramo.codigo}"></div>
             </div>
-            <textarea class="area-apunte" id="nota-${ramo.codigo}" placeholder="Escribe tus apuntes aquí..."></textarea>
           </div>
         `;
-
-        const iconoApunte = ramoDiv.querySelector(".icono-apunte");
-        const areaApunte = ramoDiv.querySelector(".area-apunte");
-        areaApunte.style.display = "none";
-
-        iconoApunte.addEventListener("click", (e) => {
-          e.stopPropagation();
-          areaApunte.style.display = areaApunte.style.display === "none" ? "block" : "none";
-        });
-
-        areaApunte.addEventListener("input", () => {
-          localStorage.setItem(`nota-${ramo.codigo}`, areaApunte.value);
-        });
-
-        const textoGuardado = localStorage.getItem(`nota-${ramo.codigo}`);
-        if (textoGuardado) {
-          areaApunte.value = textoGuardado;
-        }
 
         ramoDiv.addEventListener("click", () => {
           if (!ramoDiv.classList.contains("bloqueado")) {
@@ -86,7 +68,19 @@ function crearMalla(malla) {
           }
         });
 
+        ramoDiv.addEventListener("dblclick", () => {
+          const option = document.createElement("option");
+          option.value = ramo.codigo;
+          option.textContent = ramo.nombre;
+          selectorPomodoro.appendChild(option);
+        });
+
         ramosDiv.appendChild(ramoDiv);
+
+        const pomodoroOption = document.createElement("option");
+        pomodoroOption.value = ramo.codigo;
+        pomodoroOption.textContent = ramo.nombre;
+        selectorPomodoro.appendChild(pomodoroOption);
       });
 
       semestreDiv.appendChild(ramosDiv);
@@ -100,7 +94,6 @@ function crearMalla(malla) {
 
 function actualizarEstadoRamos() {
   const todosLosRamos = document.querySelectorAll(".ramo");
-
   todosLosRamos.forEach(ramo => {
     const prereqs = JSON.parse(ramo.getAttribute("data-prereqs"));
     const aprobados = Array.from(document.querySelectorAll(".ramo.aprobado")).map(r => r.getAttribute("data-codigo"));
@@ -122,6 +115,41 @@ function guardarEstadoRamo(ramoDiv) {
   const guardado = JSON.parse(localStorage.getItem(`ramo-${codigo}`)) || {};
   guardado.aprobado = aprobado;
   localStorage.setItem(`ramo-${codigo}`, JSON.stringify(guardado));
+}
+
+// Pomodoro Global
+let pomodoroInterval = null;
+let tiempoRestante = 25 * 60;
+let enMarcha = false;
+function iniciarPomodoroGlobal() {
+  if (enMarcha) return;
+  const codigo = document.getElementById("selector-pomodoro").value;
+  if (!codigo) return alert("Selecciona un ramo");
+  enMarcha = true;
+  pomodoroInterval = setInterval(() => {
+    if (tiempoRestante > 0) {
+      tiempoRestante--;
+      mostrarPomodoroGlobal();
+    } else {
+      clearInterval(pomodoroInterval);
+      alert("¡Pomodoro completado!");
+      enMarcha = false;
+      tiempoRestante = 25 * 60;
+    }
+  }, 1000);
+}
+function pausarPomodoroGlobal() {
+  clearInterval(pomodoroInterval);
+  enMarcha = false;
+}
+function reiniciarPomodoroGlobal() {
+  tiempoRestante = 25 * 60;
+  mostrarPomodoroGlobal();
+}
+function mostrarPomodoroGlobal() {
+  const minutos = Math.floor(tiempoRestante / 60).toString().padStart(2, '0');
+  const segundos = (tiempoRestante % 60).toString().padStart(2, '0');
+  document.getElementById("timer-global").textContent = `${minutos}:${segundos}`;
 }
 
 crearMalla(malla);
