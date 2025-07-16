@@ -135,6 +135,34 @@ body {
   text-decoration: line-through;
   color: #5e4b4b;
 }
+@font-face {
+  font-family: 'Cheesecake';
+  src: url('Cheesecake.ttf') format('truetype'); /* asegúrate de tener la fuente en tu carpeta */
+}
+
+.icono-apunte {
+  cursor: pointer;
+  margin-left: 5px;
+  font-size: 0.85rem;
+  color: #ba7680;
+  user-select: none;
+}
+
+.area-apunte {
+  margin-top: 6px;
+  width: 100%;
+  height: 60px;
+  border-radius: 0.5rem;
+  border: 1px solid #d8b3b3;
+  padding: 6px;
+  font-family: 'Cheesecake', cursive;
+  font-size: 0.75rem;
+  background-color: #fff7f3;
+  color: #5e4b4b;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+  resize: vertical;
+  transition: all 0.3s ease;
+}
 
 @media (max-width: 768px) {
   .malla {
