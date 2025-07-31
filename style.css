@@ -1,35 +1,38 @@
 @font-face {
-  font-family: 'Cheesecake';
-  src: url('Cheesecake.ttf') format('truetype');
+  font-family: 'GothicFrame';
+  src: url('Cinzel-Regular.ttf') format('truetype');
 }
+
 body {
-  font-family: 'Pinyon Script', cursive;
-  background: ##2E2E2E;
+  font-family: 'Georgia', serif;
+  background: #2E2E2E;
   margin: 0;
-  padding: 1.5rem;
-  color: #5f4b32;
+  padding: 1rem;
+  color: #D3D3D3;
 }
 
 .titulo {
   text-align: center;
   font-size: 2.5rem;
   margin-bottom: 1.5rem;
+  color: #9B4A6A;
+  font-family: 'GothicFrame', serif;
 }
 
 .malla {
   display: flex;
   flex-direction: row;
-  gap: 0.75rem;
+  gap: 0.5rem;
   overflow-x: auto;
   align-items: flex-start;
   flex-wrap: nowrap;
 }
 
 .semestre {
-  background: #fff0f5;
+  background: #262626;
   padding: 0.4rem;
-  border: 1.5px solid #d9cfc4;
-  border-radius: 0.5rem;
+  border: 1px solid #4A2A2A;
+  border-radius: 0.3rem;
   min-width: 130px;
   max-width: 130px;
   flex-shrink: 0;
@@ -37,23 +40,24 @@ body {
   flex-direction: column;
   align-items: center;
   height: 100%;
+  box-shadow: 0 0 8px rgba(155, 74, 106, 0.2);
 }
 
 .semestre-titulo {
   text-align: center;
   font-size: 0.75rem;
-  font-family: 'Cheesecake', cursive;
+  font-family: 'GothicFrame', serif;
   margin-bottom: 0.3rem;
-  color: #D3D3D3;
+  color: #E6E6E6;
   cursor: pointer;
   user-select: none;
 }
 
 .anio-titulo {
-  font-family: 'Cheesecake', cursive;
+  font-family: 'GothicFrame', serif;
   font-size: 0.75rem;
   margin-bottom: 0.3rem;
-  color: #D3D3D3;
+  color: #E6E6E6;
   font-weight: bold;
 }
 
@@ -65,14 +69,14 @@ body {
 }
 
 .ramo {
-  background: #fff8f2;
-  border: 1px solid #d6c7b7;
+  background: #1C1C1C;
+  border: 1px solid #4A2A2A;
   padding: 0.3rem;
-  border-radius: 0.4rem;
+  border-radius: 0.3rem;
   text-align: center;
   cursor: pointer;
-  transition: 0.3s;
-  font-family: 'Cheesecake', cursive;
+  transition: background 0.3s;
+  font-family: 'Georgia', serif;
   font-size: 0.75rem;
   line-height: 1.1;
   height: 60px;
@@ -84,12 +88,12 @@ body {
 
 .ramo span {
   font-size: 0.65rem;
-  color: #7b6a58;
+  color: #9B4A6A;
 }
 
 .promedio {
   font-size: 0.7rem;
-  color: #5e4b4b;
+  color: #E6E6E6;
   margin-top: 2px;
   font-weight: bold;
 }
@@ -97,12 +101,12 @@ body {
 .semestre-promedio {
   margin-top: 0.4rem;
   padding: 0.2rem 0.4rem;
-  background-color: #fceae8;
-  border: 1px solid #e5c5c5;
-  border-radius: 0.4rem;
-  font-family: 'Cheesecake', cursive;
+  background-color: #262626;
+  border: 1px solid #4A2A2A;
+  border-radius: 0.3rem;
+  font-family: 'GothicFrame', serif;
   font-size: 0.75rem;
-  color: #5f4b32;
+  color: #D3D3D3;
   font-weight: bold;
   text-align: center;
 }
@@ -110,11 +114,11 @@ body {
 .global-promedio {
   margin-top: 2rem;
   padding: 0.6rem 1rem;
-  background-color: #f9ecec;
-  border: 2px solid #e0c5c5;
-  border-radius: 0.6rem;
+  background-color: #262626;
+  border: 1px solid #4A2A2A;
+  border-radius: 0.3rem;
   font-size: 1rem;
-  color: #5a3d38;
+  color: #9B4A6A;
   font-weight: bold;
   text-align: center;
   width: fit-content;
@@ -123,107 +127,47 @@ body {
 }
 
 .ramo:hover {
-  background: #fce4ec;
+  background: #9B4A6A;
+  color: #E6E6E6;
 }
 
 .bloqueado {
   opacity: 0.5;
   pointer-events: none;
-  background: #e5e5e5;
-  color: #aaa;
+  background: #333333;
+  color: #666666;
 }
 
 .aprobado {
-  background-color: #f7cad0 !important;
+  background-color: #4A2A2A !important;
   text-decoration: line-through;
-  color: #5e4b4b;
-}
-@font-face {
-  font-family: 'Cheesecake';
-  src: url('Cheesecake.ttf') format('truetype'); /* asegúrate de tener la fuente en tu carpeta */
-}
-
-.icono-apunte {
-  cursor: pointer;
-  margin-left: 5px;
-  font-size: 0.85rem;
-  color: #ba7680;
-  user-select: none;
-}
-
-.area-apunte {
-  margin-top: 6px;
-  width: 100%;
-  height: 60px;
-  border-radius: 0.5rem;
-  border: 1px solid #d8b3b3;
-  padding: 6px;
-  font-family: 'Cheesecake', cursive;
-  font-size: 0.75rem;
-  background-color: #fff7f3;
-  color: #5e4b4b;
-  box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
-  resize: vertical;
-  transition: all 0.3s ease;
-}
-
-.icono-reloj {
-  cursor: pointer;
-  margin-left: 8px;
-  font-size: 0.85rem;
-  color: #b88e9c;
-  user-select: none;
-}
-
-.pomodoro-box {
-  margin-top: 6px;
-  padding: 6px;
-  background-color: #fff6f6;
-  border: 1px dashed #dbafaf;
-  border-radius: 0.6rem;
-  font-family: 'Cheesecake', cursive;
-  font-size: 0.8rem;
-}
-
-.pomodoro-box button {
-  font-size: 0.7rem;
-  margin: 3px;
-  background-color: #f5e1e1;
-  border: 1px solid #dfbebe;
-  border-radius: 5px;
-  padding: 3px 6px;
-  cursor: pointer;
-}
-
-#selector-pomodoro {
-  font-family: 'Cheesecake', cursive;
-  padding: 0.3rem;
-  margin-bottom: 0.6rem;
+  color: #D3D3D3;
 }
 
 .pomodoro-global {
   margin-top: 30px;
   text-align: center;
-  background-color: #fff7fb;
-  border: 2px dashed #dba7c4;
-  border-radius: 1rem;
+  background-color: #262626;
+  border: 1px dashed #4A2A2A;
+  border-radius: 0.8rem;
   padding: 20px;
-  font-family: 'Cheesecake', cursive;
+  font-family: 'GothicFrame', serif;
 }
 
 .pomodoro-global h2 {
   font-size: 1.5rem;
-  color: #b97b98;
+  color: #9B4A6A;
 }
 
 .pomodoro-global button {
-  background-color: #f7d6e0;
-  border: 1px solid #ce9ba5;
+  background-color: #4A2A2A;
+  border: 1px solid #9B4A6A;
   padding: 5px 10px;
   margin: 4px;
-  border-radius: 0.6rem;
-  font-family: 'Cheesecake', cursive;
+  border-radius: 0.4rem;
+  font-family: 'GothicFrame', serif;
   cursor: pointer;
+  color: #E6E6E6;
 }
 
 @media (max-width: 768px) {
@@ -231,12 +175,6 @@ body {
     flex-direction: column;
     align-items: center;
   }
-
-  .semestre {
-    min-width: unset;
-    width: 90%;
-  }
-}
 
   .semestre {
     min-width: unset;
