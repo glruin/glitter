@@ -5,7 +5,7 @@
 
 body {
   font-family: 'Georgia', serif;
-  background: #2E2E2E;
+  background: #4A4A4A;
   margin: 0;
   padding: 1rem;
   color: #D3D3D3;
@@ -15,7 +15,7 @@ body {
   text-align: center;
   font-size: 2.5rem;
   margin-bottom: 1.5rem;
-  color: #9B4A6A;
+  color: #F5F5F5;
   font-family: 'GothicFrame', serif;
 }
 
@@ -29,9 +29,9 @@ body {
 }
 
 .semestre {
-  background: #262626;
+  background: #333333;
   padding: 0.4rem;
-  border: 1px solid #4A2A2A;
+  border: 1px solid #B0B0B0;
   border-radius: 0.3rem;
   min-width: 130px;
   max-width: 130px;
@@ -40,7 +40,7 @@ body {
   flex-direction: column;
   align-items: center;
   height: 100%;
-  box-shadow: 0 0 8px rgba(155, 74, 106, 0.2);
+  box-shadow: 0 0 8px rgba(245, 245, 245, 0.1);
 }
 
 .semestre-titulo {
@@ -48,7 +48,7 @@ body {
   font-size: 0.75rem;
   font-family: 'GothicFrame', serif;
   margin-bottom: 0.3rem;
-  color: #E6E6E6;
+  color: #F5F5F5;
   cursor: pointer;
   user-select: none;
 }
@@ -57,7 +57,7 @@ body {
   font-family: 'GothicFrame', serif;
   font-size: 0.75rem;
   margin-bottom: 0.3rem;
-  color: #E6E6E6;
+  color: #F5F5F5;
   font-weight: bold;
 }
 
@@ -70,7 +70,7 @@ body {
 
 .ramo {
   background: #1C1C1C;
-  border: 1px solid #4A2A2A;
+  border: 1px solid #A0A0A0;
   padding: 0.3rem;
   border-radius: 0.3rem;
   text-align: center;
@@ -88,12 +88,12 @@ body {
 
 .ramo span {
   font-size: 0.65rem;
-  color: #9B4A6A;
+  color: #E0E0E0;
 }
 
 .promedio {
   font-size: 0.7rem;
-  color: #E6E6E6;
+  color: #F5F5F5;
   margin-top: 2px;
   font-weight: bold;
 }
@@ -101,8 +101,8 @@ body {
 .semestre-promedio {
   margin-top: 0.4rem;
   padding: 0.2rem 0.4rem;
-  background-color: #262626;
-  border: 1px solid #4A2A2A;
+  background-color: #333333;
+  border: 1px solid #B0B0B0;
   border-radius: 0.3rem;
   font-family: 'GothicFrame', serif;
   font-size: 0.75rem;
@@ -114,32 +114,33 @@ body {
 .global-promedio {
   margin-top: 2rem;
   padding: 0.6rem 1rem;
-  background-color: #262626;
-  border: 1px solid #4A2A2A;
+  background-color: #1C1C1C;
+  border: 1px solid #A0A0A0;
   border-radius: 0.3rem;
   font-size: 1rem;
-  color: #9B4A6A;
+  color: #F5F5F5;
   font-weight: bold;
   text-align: center;
   width: fit-content;
   margin-left: auto;
   margin-right: auto;
+  display: block;
 }
 
 .ramo:hover {
-  background: #9B4A6A;
-  color: #E6E6E6;
+  background: #4A4A4A;
+  color: #F5F5F5;
 }
 
 .bloqueado {
   opacity: 0.5;
   pointer-events: none;
-  background: #333333;
-  color: #666666;
+  background: #404040;
+  color: #888888;
 }
 
 .aprobado {
-  background-color: #4A2A2A !important;
+  background-color: #2E2E2E !important;
   text-decoration: line-through;
   color: #D3D3D3;
 }
@@ -147,8 +148,8 @@ body {
 .pomodoro-global {
   margin-top: 30px;
   text-align: center;
-  background-color: #262626;
-  border: 1px dashed #4A2A2A;
+  background-color: #333333;
+  border: 1px dashed #A0A0A0;
   border-radius: 0.8rem;
   padding: 20px;
   font-family: 'GothicFrame', serif;
@@ -156,18 +157,18 @@ body {
 
 .pomodoro-global h2 {
   font-size: 1.5rem;
-  color: #9B4A6A;
+  color: #F5F5F5;
 }
 
 .pomodoro-global button {
-  background-color: #4A2A2A;
-  border: 1px solid #9B4A6A;
+  background-color: #404040;
+  border: 1px solid #A0A0A0;
   padding: 5px 10px;
   margin: 4px;
   border-radius: 0.4rem;
   font-family: 'GothicFrame', serif;
   cursor: pointer;
-  color: #E6E6E6;
+  color: #F5F5F5;
 }
 
 @media (max-width: 768px) {
