@@ -5,7 +5,7 @@
 
 body {
   font-family: 'Georgia', serif;
-  background: #ABA6A6;
+  background: #999797;
   margin: 0;
   padding: 1rem;
   color: #D3D3D3;
@@ -29,7 +29,7 @@ body {
 }
 
 .semestre {
-  background: #333333;
+  background: #6E6D6D;
   padding: 0.4rem;
   border: 1px solid #B0B0B0;
   border-radius: 0.3rem;
@@ -69,7 +69,7 @@ body {
 }
 
 .ramo {
-  background: #1C1C1C;
+  background: #2B2A2A;
   border: 1px solid #A0A0A0;
   padding: 0.3rem;
   border-radius: 0.3rem;
@@ -93,7 +93,7 @@ body {
 
 .promedio {
   font-size: 0.7rem;
-  color: #F5F5F5;
+  color: #050505;
   margin-top: 2px;
   font-weight: bold;
 }
@@ -118,7 +118,8 @@ body {
   border: 1px solid #A0A0A0;
   border-radius: 0.3rem;
   font-size: 1rem;
-  color: #F5F5F5;
+  font-family: 'GothicFrame', serif;
+  color: #050505;
   font-weight: bold;
   text-align: center;
   width: fit-content;
@@ -135,7 +136,7 @@ body {
 .bloqueado {
   opacity: 0.5;
   pointer-events: none;
-  background: #404040;
+  background: #9E9393;
   color: #888888;
 }
 
