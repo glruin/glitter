@@ -4,7 +4,7 @@
 }
 body {
   font-family: 'Pinyon Script', cursive;
-  background: #fffafc;
+  background: ##2E2E2E;
   margin: 0;
   padding: 1.5rem;
   color: #5f4b32;
@@ -44,7 +44,7 @@ body {
   font-size: 0.75rem;
   font-family: 'Cheesecake', cursive;
   margin-bottom: 0.3rem;
-  color: #b58f84;
+  color: #D3D3D3;
   cursor: pointer;
   user-select: none;
 }
@@ -53,7 +53,7 @@ body {
   font-family: 'Cheesecake', cursive;
   font-size: 0.75rem;
   margin-bottom: 0.3rem;
-  color: #a2786a;
+  color: #D3D3D3;
   font-weight: bold;
 }
 
